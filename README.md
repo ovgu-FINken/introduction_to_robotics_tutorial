@@ -21,7 +21,7 @@ Build the workspace with the command `colcon build` (from the new directory you 
 
 Start the package for assignment one in the following way:
 - `ros2 launch watchdog watchdog.launch.py` will start the turtlesim and the watchdog node
-- `ros2 run turtlesim turtlesim_teleop_key` starts the teleoperation node - this lets you steer the turtle
+- `ros2 run turtlesim turtle_teleop_key` starts the teleoperation node - this lets you steer the turtle
 - Now you can inspect the current behaviour of the system with `rqt`
     - We suggest two plugins that you can enable: *introspection - node graph* and *topics - topic monitor*
 - You can see that the teleop node directly steers the turtle - this is not what we want
