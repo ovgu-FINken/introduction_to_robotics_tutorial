@@ -62,9 +62,7 @@ class ScoringNode(Node):
         
         position_image = np.zeros_like(self.map_image)
         x, y = self.transform_to_px_coordinates(trans)
-        self.get_logger().info(f'tx: {trans.transform.translation.x}, ty: {trans.transform.translation.y}')
-        self.get_logger().info(f'x: {x}, y: {y}')
-        position_image[y, x] = 100
+        position_image[y-2:y+3, x-2:x+3] = 100
         
         return position_image
         
@@ -113,6 +111,8 @@ class ScoringNode(Node):
             self.map_publisher.publish(self.convert_image_to_map_data(self.combine_sensor_sources()))
         else:
             self.get_logger().info('no map received yet')
+        if self.score_image is not None:
+            self.get_logger().info(f'score: {np.sum(self.score_image)/10_000}')
 
    
 def main():
