@@ -21,7 +21,7 @@ class WatchdogNode(Node):
         self.publisher.publish(msg)
         
     def controller_callback(self, msg):
-        self.get_logger().warn(f'The controller says I shold {msg.data} the turtle ...')
+        self.get_logger().warn(f'The controller says I should {msg.data} the turtle ...')
 
 
 
