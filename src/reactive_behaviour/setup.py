@@ -23,7 +23,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'controller = reactive_behaviour.controller:main'
+            'controller = reactive_behaviour.controller:main',
+            'scoring = reactive_behaviour.scoring:main'
         ],
     },
 )
