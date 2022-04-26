@@ -40,14 +40,14 @@ class ScoringNode(Node):
         self.create_subscription(OccupancyGrid, 'map', self.map_cb, qos_profile)
         self.map_publisher = self.create_publisher(OccupancyGrid, 'score_grid', 10)
         self.scan = None
-        self.create_subscription(LaserScan, 'scan', self.scan_cb, rclpy.qos.qos_profile_sensor_data)
-        self.create_timer(0.5, self.timer_cb)
         self.map_client = self.create_client(GetMap, 'map_server/map')
         self.map_client.wait_for_service()
         future = self.map_client.call_async(GetMap.Request())
         rclpy.spin_until_future_complete(self, future)
         self.score_image = None
         self.update_map(future.result().map)
+        self.create_subscription(LaserScan, 'scan', self.scan_cb, rclpy.qos.qos_profile_sensor_data)
+        self.create_timer(0.5, self.timer_cb)
         self.get_logger().info('init done')
         
     def scan_cb(self, msg):
