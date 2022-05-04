@@ -43,3 +43,9 @@ In this assignment we want to program a reactive behaviour, that controls the ro
 - You can modify the code within the file `controller.py` to change the behaviour of the robot
 - Explore as much of the reachable area as possible (think of a cleaning robot)
 - Don't crash ;)
+
+### Benchmark
+Run your behaviour and note the score after 240s (sim-time)
+- `ros2 launch reactive_behaviour robot.launch.py n_robots:=1`
+- `ros2 launch reactive_behaviour swarmlab.launch.py n_robots:=1`
+- real robot
