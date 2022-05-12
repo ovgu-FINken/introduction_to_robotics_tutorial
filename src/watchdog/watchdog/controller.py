@@ -12,6 +12,9 @@ class ControllerNode(Node):
         self.i = 0
         self.period = 2.0
         self.create_timer(self.period, self.timer_callback)
+        self.status_pub = self.create_publisher(String, 'status', 10)
+        self.status_pub.publish(String(data='ready'))
+        self.get_logger().info('controller node started')
 
     def timer_callback(self):
         # self.get_logger().info(f'controller @ {self.period*self.i}s')

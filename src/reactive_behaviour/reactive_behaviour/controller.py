@@ -3,6 +3,7 @@ from rclpy.node import Node
 
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
+from std_msgs.msg import String
 
 class VelocityController(Node):
 
@@ -12,18 +13,23 @@ class VelocityController(Node):
         self.forward_distance = 0
         self.create_subscription(LaserScan, 'scan', self.laser_cb, rclpy.qos.qos_profile_sensor_data)
         self.create_timer(0.1, self.timer_cb)
-        self.get_logger().info('controller node started')
+        
         
     def timer_cb(self):
         msg = Twist()
         x = self.forward_distance - 0.3
-        x = x if x < 0.1 else 0.1
-        x = x if x >= 0 else 0.0
-        msg.linear.x = x
+        if x > 0:
+            msg.linear.x = 0.10
+            msg.angular.z = 0.0
+        else:
+            msg.linear.x = 0.0
+            msg.angular.z = 1.0
         self.publisher.publish(msg)
     
     def laser_cb(self, msg):
-        self.forward_distance = msg.ranges[0]
+        r = msg.ranges
+        r = [x if x > msg.range_min and x < msg.range_max else 10.0 for x in r]
+        self.forward_distance = min(r[:45] + r[-45:])
 
 
 
