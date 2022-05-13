@@ -30,12 +30,13 @@ class LocatorNode(Node):
         msg = PointStamped()
         msg.point.x, msg.point.y, msg.point.z = self.calculate_position()
         msg.header.frame_id = 'world'
-        self.get_logger().info(f'publishing: {msg.point.x, msg.point.y, msg.point.z}')
         self.position_pub.publish(msg)
     
     def calculate_position(self):
         if not len(self.anchor_ranges):
             return 0.0, 0.0, 0.0
+        
+        # YOUR CODE GOES HERE:
         x = np.mean([r.range for r in self.anchor_ranges]) - 0.5
         return x, 0.0, 0.0
 

@@ -48,6 +48,15 @@ def controller_spawning(context, *args, **kwargs):
             }],
             output='screen',
         ))
+        controllers.append(Node(
+            package='state_estimation',
+            executable='filter',
+            namespace=robot['name'],
+            parameters=[{
+                'use_sim_time': use_sim_time,
+            }],
+            output='screen',
+        ))
     
     return controllers
 
