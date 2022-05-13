@@ -49,3 +49,13 @@ Run your behaviour and note the score after 240s (sim-time)
 - `ros2 launch reactive_behaviour robot.launch.py n_robots:=1`
 - `ros2 launch reactive_behaviour swarmlab.launch.py n_robots:=1`
 - real robot
+
+## Assignment 3: State Estimation
+
+In this assignment your task is to estimate the state of the robot. To achieve this goal, you will follow a two step process:
+- Compute the robot postition (x, y, z), based on range measurements (similar to GPS)
+- Estimate the complete state of the robot (x,y,theta) based on your previous computation
+The `locator.py` node containts some code to get you started with position estimation. In the node `filter.py` you will find code to get you started with creating a Kalman-filter to estimate the robots position.
+
+You can start your code with the 'robot.launch.py' launch-file, just as you did in assignment 2.
+
