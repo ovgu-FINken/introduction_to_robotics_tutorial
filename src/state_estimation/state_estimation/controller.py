@@ -1,7 +1,7 @@
 import rclpy
 from rclpy.node import Node
 
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, PoseStamped, PointStamped
 from sensor_msgs.msg import LaserScan
 
 class VelocityController(Node):
@@ -10,7 +10,11 @@ class VelocityController(Node):
         super().__init__('velocity_controller')
         self.publisher = self.create_publisher(Twist, 'cmd_vel', 10)
         self.forward_distance = 0
+        self.goal = None
+        self.position = None
         self.create_subscription(LaserScan, 'scan', self.laser_cb, rclpy.qos.qos_profile_sensor_data)
+        self.create_subscription(PoseStamped, 'nav/goal', self.goal_cb, 10)
+        self.create_subscription(PointStamped, 'position', self.position_cb, 10)
         self.create_timer(0.1, self.timer_cb)
         self.get_logger().info('controller node started')
         
@@ -22,9 +26,17 @@ class VelocityController(Node):
         msg.linear.x = x
         self.publisher.publish(msg)
     
+    def goal_cb(self, msg):
+        goal = msg.pose.position.x, msg.pose.position.y
+        if self.goal != goal:
+            self.get_logger().info(f'received a new goal: (x={goal[0]}, y={goal[1]})')
+            self.goal = goal
+    
     def laser_cb(self, msg):
         self.forward_distance = msg.ranges[0]
-
+        
+    def position_cb(self, msg):
+        self.position = msg.point.x, msg.point.y
 
 
 def main(args=None):

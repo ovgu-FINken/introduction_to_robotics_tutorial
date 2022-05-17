@@ -50,14 +50,26 @@ def controller_spawning(context, *args, **kwargs):
         ))
         controllers.append(Node(
             package='state_estimation',
-            executable='filter',
+            executable='controller',
             namespace=robot['name'],
             parameters=[{
                 'use_sim_time': use_sim_time,
             }],
             output='screen',
         ))
-    
+        controllers.append(Node(
+           package='goal_provider',
+           executable='simple_goal',
+           namespace=robot['name'],
+           parameters=[{
+              'use_sim_time': use_sim_time,
+              'x': robot['goals']['x'],
+              'y': robot['goals']['y'],
+              'theta': robot['goals']['theta'],
+           }],
+           output='screen',
+           #arguments=[],
+        ))
     return controllers
 
 
@@ -66,7 +78,7 @@ def generate_launch_description():
          'behaviour': 'false',
          'world': 'icra2021_no_obstacle.world',
          'map': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'maps' ,'icra2021_map_no_obstacle.yaml'),
-         'robots_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'icra2021_sim.yaml'),
+         'robots_file': os.path.join(get_package_share_directory('state_estimation'), 'params', 'robot.yaml'),
          'rosbag_topics_file': os.path.join(get_package_share_directory('trajectory_follower'), 'params', 'rosbag_topics.yaml'),
          'qos_override_file': os.path.join(get_package_share_directory('experiment_measurement'), 'params', 'qos_override.yaml')
     }
