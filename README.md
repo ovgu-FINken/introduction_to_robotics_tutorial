@@ -54,7 +54,11 @@ Run your behaviour and note the score after 240s (sim-time)
 
 In this assignment your task is to estimate the state of the robot. To achieve this goal, you will follow a two step process:
 - Compute the robot postition (x, y, z) in the node `locator.py`, based on range measurements (similar to GPS)
-- Estimate the complete state of the robot (x,y,theta) based on your previous computation in the node `filter.py`
+- Go to the position published in the topic `goal` by publishing the correct `cmd_vel`
 
 You can start your code with the 'robot.launch.py' launch-file, just as you did in assignment 2.
+
+- We will measure the time to complete the third goal
+- As always: Don't crash
+
 
