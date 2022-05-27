@@ -21,15 +21,15 @@ def controller_spawning(context, *args, **kwargs):
         robots = yaml.safe_load(stream)
         
     for robot in robots[:int(n_robots)]:
-        controllers.append(Node(
-           package='reactive_behaviour',
-           executable='controller',
-           namespace=robot['name'],
-           parameters=[{
-            'use_sim_time': use_sim_time,
-            }],
-           output='screen',
-        ))
+        #controllers.append(Node(
+        #   package='reactive_behaviour',
+        #   executable='controller',
+        #   namespace=robot['name'],
+        #   parameters=[{
+        #    'use_sim_time': use_sim_time,
+        #    }],
+        #   output='screen',
+        #))
         controllers.append(Node(
             package='fake_range',
             executable='fake_range',
