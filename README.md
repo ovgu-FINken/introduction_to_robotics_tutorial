@@ -49,3 +49,16 @@ Run your behaviour and note the score after 240s (sim-time)
 - `ros2 launch reactive_behaviour robot.launch.py n_robots:=1`
 - `ros2 launch reactive_behaviour swarmlab.launch.py n_robots:=1`
 - real robot
+
+## Assignment 3: State Estimation
+
+In this assignment your task is to estimate the state of the robot. To achieve this goal, you will follow a two step process:
+- Compute the robot postition (x, y, z) in the node `locator.py`, based on range measurements (similar to GPS)
+- Go to the position published in the topic `goal` by publishing the correct `cmd_vel`
+
+You can start your code with the 'robot.launch.py' launch-file, just as you did in assignment 2.
+
+- We will measure the time to complete the third goal
+- As always: Don't crash
+
+
