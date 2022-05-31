@@ -26,6 +26,7 @@ setup(
         'console_scripts': [
             'controller = state_estimation.controller:main',
             'locator = state_estimation.locator:main',
+            'scoring = state_estimation.scoring:main',
         ],
     },
 )
