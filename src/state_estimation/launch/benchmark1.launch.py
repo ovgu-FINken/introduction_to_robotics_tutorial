@@ -36,15 +36,16 @@ def controller_spawning(context, *args, **kwargs):
             namespace=robot['name'],
             parameters=[{
                 'use_sim_time': use_sim_time,
+                'rate' : 0.1,
                 'anchor_list': '''
-- {x: 0.0, y:0.0, z:1.0, mu=0.1, sigma=0.1}
-- {x: 3.0, y:3.0, z:1.0, mu=0.1, sigma=0.1}
-- {x: 0.0, y:3.0, z:1.0, mu=0.1, sigma=0.1}
-- {x: 3.0, y:0.0, z:1.0, mu=0.1, sigma=0.1}
-- {x: 0.0, y:0.0, z:2.0, mu=0.1, sigma=0.1}
-- {x: 3.0, y:3.0, z:2.0, mu=0.1, sigma=0.1}
-- {x: 0.0, y:3.0, z:2.0, mu=0.1, sigma=0.1}
-- {x: 3.0, y:0.0, z:2.0, mu=0.1, sigma=0.1}
+- {x: 0.0, y: 0.0, z: 1.0, mu: 0.1, sigma: 0.1}
+- {x: 3.0, y: 3.0, z: 1.0, mu: 0.1, sigma: 0.1}
+- {x: 0.0, y: 3.0, z: 1.0, mu: 0.1, sigma: 0.1}
+- {x: 3.0, y: 0.0, z: 1.0, mu: 0.1, sigma: 0.1}
+- {x: 0.0, y: 0.0, z: 2.0, mu: 0.1, sigma: 0.1}
+- {x: 3.0, y: 3.0, z: 2.0, mu: 0.1, sigma: 0.1}
+- {x: 0.0, y: 3.0, z: 2.0, mu: 0.1, sigma: 0.1}
+- {x: 3.0, y: 0.0, z: 2.0, mu: 0.1, sigma: 0.1}
 ''' 
             }],
             output='screen',
