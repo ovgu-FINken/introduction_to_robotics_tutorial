@@ -38,14 +38,14 @@ def controller_spawning(context, *args, **kwargs):
                 'use_sim_time': use_sim_time,
                 'rate' : 0.1,
                 'anchor_list': '''
-- {x: 0.0, y: 0.0, z: 1.0, oz: 0.1, mu: 1.01, sigma: 0.1}
-- {x: 3.0, y: 3.0, z: 1.0, oz: 0.1, mu: 1.01, sigma: 0.1}
-- {x: 0.0, y: 3.0, z: 1.0, oz: 0.1, mu: 1.01, sigma: 0.1}
-- {x: 3.0, y: 0.0, z: 1.0, oz: 0.1, mu: 1.01, sigma: 0.1}
-- {x: 0.0, y: 0.0, z: 2.0, oz: -0.1, oy: 0.1, mu: 1.01, sigma: 0.2}
-- {x: 3.0, y: 3.0, z: 2.0, oz: -0.1, oy: 0.1, mu: 1.01, sigma: 0.2}
-- {x: 0.0, y: 3.0, z: 2.0, oz: -0.1, oy: -0.1,mu: 1.01, sigma: 0.2}
-- {x: 3.0, y: 0.0, z: 2.0, oz: -0.1, oy: -0.1,mu: 1.01, sigma: 0.2}
+- {x: 0.0, y: -0.0, z: 1.0, oz: 0.1, mu: 1.01, sigma: 0.05}
+- {x: 3.0, y: -3.0, z: 1.0, oz: 0.1, mu: 1.01, sigma: 0.05}
+- {x: 0.0, y: -3.0, z: 1.0, oz: 0.1, mu: 1.01, sigma: 0.05}
+- {x: 3.0, y: -0.0, z: 1.0, oz: 0.1, mu: 1.01, sigma: 0.05}
+- {x: 0.0, y: -0.0, z: 2.0, oz: -0.1, oy: 0.1, mu: 1.01, sigma: 0.1}
+- {x: 3.0, y: -3.0, z: 2.0, oz: -0.1, oy: 0.1, mu: 1.01, sigma: 0.1}
+- {x: 0.0, y: -3.0, z: 2.0, oz: -0.1, oy: -0.1,mu: 1.01, sigma: 0.1}
+- {x: 3.0, y: -0.0, z: 2.0, oz: -0.1, oy: -0.1,mu: 1.01, sigma: 0.1}
 ''' 
             }],
             output='screen',
