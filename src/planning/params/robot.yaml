@@ -1,0 +1,9 @@
+- name: "robotA"
+  x_pose: 0.0
+  y_pose: 0.0
+  z_pose: 0.0
+  yaw_pose: 0.0
+  goals:
+    x : [1.5, 1.0, 1.4, 0.0]
+    y : [-0.3, -1.5, 0.0, 0.0]
+    theta: [1.0, 0 , -1.5, 0.0]
