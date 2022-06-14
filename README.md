@@ -61,4 +61,16 @@ You can start your code with the 'robot.launch.py' launch-file, just as you did 
 - We will measure the time to complete the third goal
 - As always: Don't crash
 
+## Assignment 4: Planning
+
+In this assignment, you will be resposible for planning the future path of the robots. For this planning task, you will get goal and position information for the robot, as well as a version of the map containing obstacle information.
+As the state-space, we will use the pose information (x, y, angle) for the robot.
+
+You can find out how the transition between two states is working, by creating a path between any pair of poses with a vehicle model. The robot is able to follow the path created by the vehicle model (with an unknown tracking error).
+
+- Start the behaviour using the `ros2 launch planning robot.launch.py`
+- We also provide a jupyter-notebook to check your code outside of ros2 (a visualization can help to debug your code)
+
+
+We suggest that you use the Probabilistic Roadmap as a planning approach, but you can also use different approaches if you like.
 
