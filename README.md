@@ -5,7 +5,7 @@ You can start working on the first assignment immediatly.
 
 ## Assignment 1: Turtlesim
 
-We will start by using the turtlesim simulation. You can find a lot of documentation for the turtlesim online, make sure that you read documentation for ros2 (version foxy-fitzroy).
+We will start by using the turtlesim simulation. You can find a lot of documentation for the turtlesim online, make sure that you read documentation for ros2 (version humble).
 Your task in this assignment is to enhance a 'watchdog' node, which intecepts and changes the inputs given by the user.
 
 The goal of this assignment is that you familiarize with the ros2 ecosystem:
@@ -35,7 +35,6 @@ Start the package for assignment one in the following way:
 
 ## Assignment 2: Reactive Behaviour
 
-Due date: May 3 / May 4 
 In this assignment we want to program a reactive behaviour, that controls the robot by directly computing actuator commands from the sensor input. The sensor input we use is the laser scanner of the robot, which publishes to the `scan` topic. The velocity of the robot is controlled via the `cmd_vel` topic.
 
 - Download the new code using git (you can either use a new branch for assigment 2, or merge the upstream changes to your local copy of the workspace).
