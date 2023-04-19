@@ -37,6 +37,7 @@ def controller_spawning(context, *args, **kwargs):
            parameters=[{
             'use_sim_time': use_sim_time,
             }],
+           remappings=[('/tf', f'/{robot["name"]}/tf'), ('/tf_static', f'/{robot["name"]}/tf_static')],
            output='screen',
         ))
     

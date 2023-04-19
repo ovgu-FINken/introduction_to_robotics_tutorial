@@ -14,24 +14,23 @@ from nav_msgs.msg import OccupancyGrid
 from nav_msgs.srv import GetMap
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import String
+from driving_swarm_utils.node import DrivingSwarmNode
 
 def yaw_from_orientation(orientation):
     ot = orientation.x, orientation.y, orientation.z, orientation.w
     return tf_transformations.euler_from_quaternion(ot)[2]
 
-class ScoringNode(Node):
+class ScoringNode(DrivingSwarmNode):
     def __init__(self):
         super().__init__('scoring_node')
 
         self.robot_frames = []
         self.get_logger().info(self.get_namespace())
-        self.own_frame = 'base_link'
-        self.reference_frame = 'map'
+        self.get_frames()
+        self.setup_tf()
         
         self.safety_dist = 0.15
 
-        self.tfBuffer = tf2_ros.Buffer(cache_time=rclpy.time.Duration(seconds=3.0))
-        self.tfListener = tf2_ros.TransformListener(self.tfBuffer, self)
         
         self.raw_map = None
         # create a qos profile to receive the last sent map
@@ -45,6 +44,7 @@ class ScoringNode(Node):
         self.map_client.wait_for_service()
         future = self.map_client.call_async(GetMap.Request())
         rclpy.spin_until_future_complete(self, future)
+        self.wait_for_tf()
         self.score_image = None
         self.update_map(future.result().map)
         self.create_subscription(LaserScan, 'scan', self.scan_cb, rclpy.qos.qos_profile_sensor_data)
@@ -59,7 +59,7 @@ class ScoringNode(Node):
         
     def position_image(self):
         try:
-            trans = self.tfBuffer.lookup_transform(self.raw_map.header.frame_id, self.own_frame, rclpy.time.Time().to_msg())
+            trans = self.tf_buffer.lookup_transform(self.raw_map.header.frame_id, self.own_frame, rclpy.time.Time().to_msg())
         except Exception as e:
             self.get_logger().warn(f'{e}')
             return np.zeros_like(self.map_image)

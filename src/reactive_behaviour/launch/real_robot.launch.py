@@ -35,6 +35,7 @@ def controller_spawning(context, *args, **kwargs):
            namespace=robot['name'],
            parameters=[{
             }],
+           remappings=[('/tf', f'/{robot["name"]}/tf'), ('/tf_static', f'/{robot["name"]}/tf_static')],
            output='screen',
         ))
     
