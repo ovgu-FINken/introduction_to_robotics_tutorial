@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import numpy as np
-import PyKDL
 from skimage import io, segmentation
 from scipy.ndimage import gaussian_filter
 
@@ -9,6 +8,7 @@ import rclpy
 import tf2_ros
 import tf2_geometry_msgs
 import tf2_py
+import tf_transformations
 from rclpy.node import Node
 from nav_msgs.msg import OccupancyGrid
 from nav_msgs.srv import GetMap
@@ -16,8 +16,8 @@ from sensor_msgs.msg import LaserScan
 from std_msgs.msg import String
 
 def yaw_from_orientation(orientation):
-    rot = PyKDL.Rotation.Quaternion(orientation.x, orientation.y, orientation.z, orientation.w)
-    return rot.GetRPY()[2]
+    ot = orientation.x, orientation.y, orientation.z, orientation.w
+    return tf_transformations.euler_from_quaternion(ot)[2]
 
 class ScoringNode(Node):
     def __init__(self):

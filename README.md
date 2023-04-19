@@ -48,7 +48,6 @@ In this assignment we want to program a reactive behaviour, that controls the ro
 Run your behaviour and note the score after 240s (sim-time)
 - `ros2 launch reactive_behaviour robot.launch.py n_robots:=1`
 - `ros2 launch reactive_behaviour swarmlab.launch.py n_robots:=1`
-- real robot
 
 ## Assignment 3: State Estimation
 
