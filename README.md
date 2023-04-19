@@ -32,6 +32,7 @@ Start the package for assignment one in the following way:
 - When the behaviour of the turtle is right, pay attention to the controller node
     - This node publishes a start and a stop message
     - Modify the behaviour of the watchdog, so the turtle is only able to turn before the start command is sent and stopped completly after the stop command is sent
+    - In order to create the desired behaviour you have to set certain components of the 'cmd_vel' topic to zero
 
 ## Assignment 2: Reactive Behaviour
 
