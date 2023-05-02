@@ -52,3 +52,4 @@ qtcreator-*
 CATKIN_IGNORE
 install/
 
+src/driving_swarm_infrastructure
