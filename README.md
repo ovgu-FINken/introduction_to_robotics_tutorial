@@ -38,7 +38,7 @@ Start the package for assignment one in the following way:
 
 In this assignment we want to program a reactive behaviour, that controls the robot by directly computing actuator commands from the sensor input. The sensor input we use is the laser scanner of the robot, which publishes to the `scan` topic. The velocity of the robot is controlled via the `cmd_vel` topic.
 
-- Download the new code using git (you can either use a new branch for assigment 2, or merge the upstream changes to your local copy of the workspace).
+- Make sure you use the most recent version of the assignment by using git (you can either use a new branch for assigment 2, or merge the upstream changes to your local copy of the workspace).
 - The new code is in a ros-package called `reactive_behaviour`, use `colcon build` and start the behaviour with `ros2 launch reactive_behaviour robot.launch.py n_robots:=1`
 - You can modify the code within the file `controller.py` to change the behaviour of the robot
 - Explore as much of the reachable area as possible (think of a cleaning robot)
