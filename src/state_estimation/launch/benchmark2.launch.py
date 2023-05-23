@@ -33,6 +33,7 @@ def controller_spawning(context, *args, **kwargs):
         controllers.append(Node(
             package='fake_range',
             executable='fake_range',
+            remappings=[('/tf', f'/{robot["name"]}/tf'), ('/tf_static', f'/{robot["name"]}/tf_static')],
             namespace=robot['name'],
             parameters=[{
                 'use_sim_time': use_sim_time,
@@ -71,6 +72,7 @@ def controller_spawning(context, *args, **kwargs):
         controllers.append(Node(
             package='state_estimation',
             executable='scoring',
+            remappings=[('/tf', f'/{robot["name"]}/tf'), ('/tf_static', f'/{robot["name"]}/tf_static')],
             namespace=robot['name'],
             parameters=[{
                 'use_sim_time': use_sim_time,
@@ -78,17 +80,19 @@ def controller_spawning(context, *args, **kwargs):
             output='screen',
         ))
         controllers.append(Node(
-           package='goal_provider',
-           executable='simple_goal',
-           namespace=robot['name'],
-           parameters=[{
-              'use_sim_time': use_sim_time,
-              'x': robot['goals']['x'],
-              'y': robot['goals']['y'],
-              'theta': robot['goals']['theta'],
-           }],
-           output='screen',
-           #arguments=[],
+            package='goal_provider',
+            executable='simple_goal',
+
+            remappings=[('/tf', f'/{robot["name"]}/tf'), ('/tf_static', f'/{robot["name"]}/tf_static')],
+            namespace=robot['name'],
+            parameters=[{
+               'use_sim_time': use_sim_time,
+               'x': robot['goals']['x'],
+               'y': robot['goals']['y'],
+               'theta': robot['goals']['theta'],
+            }],
+            output='screen',
+            #arguments=[],
         ))
     return controllers
 

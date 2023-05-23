@@ -34,6 +34,7 @@ def controller_spawning(context, *args, **kwargs):
             package='fake_range',
             executable='fake_range',
             namespace=robot['name'],
+            remappings=[('/tf', f'/{robot["name"]}/tf'), ('/tf_static', f'/{robot["name"]}/tf_static')],
             parameters=[{
                 'use_sim_time': use_sim_time,
                 'rate' : 0.1,
@@ -69,6 +70,7 @@ def controller_spawning(context, *args, **kwargs):
             output='screen',
         ))
         controllers.append(Node(
+            remappings=[('/tf', f'/{robot["name"]}/tf'), ('/tf_static', f'/{robot["name"]}/tf_static')],
             package='state_estimation',
             executable='scoring',
             namespace=robot['name'],
@@ -78,6 +80,7 @@ def controller_spawning(context, *args, **kwargs):
             output='screen',
         ))
         controllers.append(Node(
+           remappings=[('/tf', f'/{robot["name"]}/tf'), ('/tf_static', f'/{robot["name"]}/tf_static')],
            package='goal_provider',
            executable='simple_goal',
            namespace=robot['name'],
