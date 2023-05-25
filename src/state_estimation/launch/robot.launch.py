@@ -15,26 +15,20 @@ def controller_spawning(context, *args, **kwargs):
     controllers = []
 
     n_robots = LaunchConfiguration('n_robots').perform(context)
-    robots_file = LaunchConfiguration('robots_file').perform(context)
+    robots_file = LaunchConfiguration('robot_names_file').perform(context)
+    waypoints_file = LaunchConfiguration('waypoints_file').perform(context)
     use_sim_time = TextSubstitution(text='true')
     with open(robots_file, 'r') as stream:
         robots = yaml.safe_load(stream)
+    with open(waypoints_file, 'r') as stream:
+        goals = yaml.safe_load(stream)
         
-    for robot in robots[:int(n_robots)]:
-        #controllers.append(Node(
-        #   package='reactive_behaviour',
-        #   executable='controller',
-        #   namespace=robot['name'],
-        #   parameters=[{
-        #    'use_sim_time': use_sim_time,
-        #    }],
-        #   output='screen',
-        #))
+    for goal, robot in list(zip(goals, robots))[:int(n_robots)]:
         controllers.append(Node(
             package='fake_range',
             executable='fake_range',
             remappings=[('/tf', 'tf'), ('/tf_static', 'tf_static')],
-            namespace=robot['name'],
+            namespace=robot,
             parameters=[{
                 'use_sim_time': use_sim_time,
             }],
@@ -43,7 +37,7 @@ def controller_spawning(context, *args, **kwargs):
         controllers.append(Node(
             package='state_estimation',
             executable='locator',
-            namespace=robot['name'],
+            namespace=robot,
             parameters=[{
                 'use_sim_time': use_sim_time,
             }],
@@ -52,7 +46,7 @@ def controller_spawning(context, *args, **kwargs):
         controllers.append(Node(
             package='state_estimation',
             executable='controller',
-            namespace=robot['name'],
+            namespace=robot,
             parameters=[{
                 'use_sim_time': use_sim_time,
             }],
@@ -62,7 +56,7 @@ def controller_spawning(context, *args, **kwargs):
             package='state_estimation',
             executable='scoring',
             remappings=[('/tf', 'tf'), ('/tf_static', 'tf_static')],
-            namespace=robot['name'],
+            namespace=robot,
             parameters=[{
                 'use_sim_time': use_sim_time,
             }],
@@ -72,12 +66,10 @@ def controller_spawning(context, *args, **kwargs):
             package='goal_provider',
             executable='simple_goal',
             remappings=[('/tf', 'tf'), ('/tf_static', 'tf_static')],
-            namespace=robot['name'],
+            namespace=robot,
             parameters=[{
               'use_sim_time': use_sim_time,
-              'x': robot['goals']['x'],
-              'y': robot['goals']['y'],
-              'theta': robot['goals']['theta'],
+              'waypoints': yaml.dump(goal['waypoints']),
             }],
             output='screen',
             #arguments=[],
@@ -90,9 +82,10 @@ def generate_launch_description():
          'behaviour': 'false',
          'world': 'icra2021_no_obstacle.world',
          'map': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'maps' ,'icra2021_map_no_obstacle.yaml'),
-         'robots_file': os.path.join(get_package_share_directory('state_estimation'), 'params', 'robot.yaml'),
-         'rosbag_topics_file': os.path.join(get_package_share_directory('trajectory_follower'), 'params', 'rosbag_topics.yaml'),
-         'qos_override_file': os.path.join(get_package_share_directory('experiment_measurement'), 'params', 'qos_override.yaml')
+         'poses_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'icra2021_poses.yaml'),
+         'robot_names_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'robot_names_sim.yaml'),
+         'waypoints_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'icra2021_waypoints.yaml'),
+         #'robots_file': os.path.join(get_package_share_directory('state_estimation'), 'params', 'robot.yaml'),
     }
     multi_robot_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('driving_swarm_bringup'), 'launch', 'multi_robot.launch.py')),

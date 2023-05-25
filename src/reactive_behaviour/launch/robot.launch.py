@@ -15,7 +15,7 @@ def controller_spawning(context, *args, **kwargs):
     controllers = []
 
     n_robots = LaunchConfiguration('n_robots').perform(context)
-    robots_file = LaunchConfiguration('robots_file').perform(context)
+    robots_file = LaunchConfiguration('robot_names_file').perform(context)
     use_sim_time = TextSubstitution(text='true')
     with open(robots_file, 'r') as stream:
         robots = yaml.safe_load(stream)
@@ -24,7 +24,7 @@ def controller_spawning(context, *args, **kwargs):
         controllers.append(Node(
            package='reactive_behaviour',
            executable='controller',
-           namespace=robot['name'],
+           namespace=robot,
            parameters=[{
             'use_sim_time': use_sim_time,
             }],
@@ -33,11 +33,11 @@ def controller_spawning(context, *args, **kwargs):
         controllers.append(Node(
            package='reactive_behaviour',
            executable='scoring',
-           namespace=robot['name'],
+           namespace=robot,
            parameters=[{
             'use_sim_time': use_sim_time,
             }],
-           remappings=[('/tf', f'/{robot["name"]}/tf'), ('/tf_static', f'/{robot["name"]}/tf_static')],
+           remappings=[('/tf', f'tf'), ('/tf_static', f'tf_static')],
            output='screen',
         ))
     
@@ -49,7 +49,8 @@ def generate_launch_description():
          'behaviour': 'false',
          'world': 'icra2021_no_obstacle.world',
          'map': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'maps' ,'icra2021_map_no_obstacle.yaml'),
-         'robots_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'icra2021_sim.yaml'),
+         'poses_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'icra2021_poses.yaml'),
+         'robot_names_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'robot_names_sim.yaml'),
          'rosbag_topics_file': os.path.join(get_package_share_directory('trajectory_follower'), 'params', 'rosbag_topics.yaml'),
          'qos_override_file': os.path.join(get_package_share_directory('experiment_measurement'), 'params', 'qos_override.yaml')
     }
