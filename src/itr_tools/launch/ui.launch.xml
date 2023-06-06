@@ -1,0 +1,10 @@
+<launch>
+  <arg name="config" default="state_estimate"/>
+  <node pkg='rqt_gui' exec='rqt_gui'  name='rqt' namespace="/robotA" />
+  <include file="$(find-pkg-share nav2_bringup)/launch/rviz_launch.py">
+    <arg name="namespace" value="/robotA"/>
+    <arg name="use_namespace" value="true"/>
+    <arg name="vime" value="true"/>
+    <arg name="rviz_config" value="$(find-pkg-share itr_tools)/config/$(var config).rviz"/>
+  </include>
+</launch>
