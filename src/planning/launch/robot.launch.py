@@ -15,17 +15,22 @@ def controller_spawning(context, *args, **kwargs):
     controllers = []
 
     n_robots = LaunchConfiguration('n_robots').perform(context)
-    robots_file = LaunchConfiguration('robots_file').perform(context)
+    robots_file = LaunchConfiguration('robot_names_file').perform(context)
+    poses_file = LaunchConfiguration('poses_file').perform(context)
+    waypoints_file = LaunchConfiguration('waypoints_file').perform(context)
     use_sim_time = TextSubstitution(text='true')
     with open(robots_file, 'r') as stream:
         robots = yaml.safe_load(stream)
+    with open(waypoints_file, 'r') as stream:
+        goals = yaml.safe_load(stream)
         
     
-    for robot in robots[:int(n_robots)]:
+    for name, goal in list(zip(robots, goals))[:int(n_robots)]:
         controllers.append(Node(
            package='planning',
            executable='planner',
-           namespace=robot['name'],
+           remappings=[('/tf', f'tf'), ('/tf_static', f'tf_static')],
+           namespace=name,
            parameters=[{
             'use_sim_time': use_sim_time,
             'vehicle_model': 1,
@@ -39,7 +44,8 @@ def controller_spawning(context, *args, **kwargs):
         controllers.append(Node(
            package='trajectory_follower',
            executable='trajectory_follower',
-           namespace=robot['name'],
+           namespace=name,
+           remappings=[('/tf', f'tf'), ('/tf_static', f'tf_static')],
            parameters=[
               {
                   "use_sim_time": use_sim_time,
@@ -54,12 +60,11 @@ def controller_spawning(context, *args, **kwargs):
         controllers.append(Node(
            package='goal_provider',
            executable='simple_goal',
-           namespace=robot['name'],
+           namespace=name,
+           remappings=[('/tf', f'tf'), ('/tf_static', f'tf_static')],
            parameters=[{
               'use_sim_time': use_sim_time,
-              'x': robot['goals']['x'],
-              'y': robot['goals']['y'],
-              'theta': robot['goals']['theta'],
+              'waypoints': yaml.dump(goal['waypoints']),
            }],
            output='screen',
            #arguments=[],
@@ -73,7 +78,9 @@ def generate_launch_description():
          'behaviour': 'false',
          'world': 'lndw2022.world',
          'map': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'maps' ,'lndw2022.yaml'),
-         'robots_file': os.path.join(get_package_share_directory('planning'),'params', 'robot.yaml'),
+         'waypoints_file': os.path.join(get_package_share_directory('planning'),'params', 'robot_waypoints.yaml'),
+         'poses_file': os.path.join(get_package_share_directory('planning'), 'params', 'robot_poses.yaml'),
+         'robot_names_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'robot_names_sim.yaml'),
     }
     multi_robot_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(get_package_share_directory('driving_swarm_bringup'), 'launch', 'multi_robot.launch.py')),

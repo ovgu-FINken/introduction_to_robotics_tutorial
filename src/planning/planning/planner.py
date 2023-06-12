@@ -1,16 +1,15 @@
 import rclpy
 from rclpy.node import Node
 
-from driving_swarm_nav_graph.nav_graph import NavGraphNode
 from trajectory_generator.vehicle_model_node import (
     TrajectoryGenerator,
     Vehicle,
 )
 
 import tf2_ros
-import tf2_kdl
 import tf2_py
 import tf2_geometry_msgs
+import tf_transformations
 import numpy as np
 import traceback
 from geometry_msgs.msg import PoseStamped, Pose2D, Quaternion
@@ -19,20 +18,18 @@ from nav_msgs.msg import Path
 from std_msgs.msg import String, Int32
 from driving_swarm_messages.srv import UpdateTrajectory
 from std_srvs.srv import Empty
-from trajectory_generator.utils import yaw_from_orientation, yaw_to_orientation
 import polygonal_roadmaps as poro
 import yaml
+from driving_swarm_utils.node import DrivingSwarmNode
 from planning import utils
 
 
-class Planner(Node):
+class Planner(DrivingSwarmNode):
     def __init__(self):
         super().__init__('planner')
-        self.get_logger().info("Starting")
 
         # initialize local variables
-        self.own_frame = "base_link"
-        self.reference_frame = "map"
+        self.get_frames()
         self.goal = None
         self.pose = None
 
@@ -61,21 +58,9 @@ class Planner(Node):
         )
 
         self.occupied_space = utils.calculate_occupied_space(self.get_parameter('map_file').get_parameter_value().string_value)
-        self.tfBuffer = tf2_ros.Buffer()
-        self.tfListener = tf2_ros.TransformListener(self.tfBuffer, self)
+        self.setup_tf()
+        self.setup_command_interface(autorun=False)
 
-        qos_profile = rclpy.qos.qos_profile_system_default
-        qos_profile.reliability = (
-            rclpy.qos.QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_RELIABLE
-        )
-        qos_profile.durability = (
-            rclpy.qos.QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL
-        )
-        self.status_pub = self.create_publisher(String, "status", qos_profile)
-
-        self.create_subscription(
-            String, "/command", self.command_cb, qos_profile
-        )
         self.follow_client = self.create_client(
             UpdateTrajectory, "nav/follow_trajectory"
         )
@@ -84,42 +69,27 @@ class Planner(Node):
         self.create_service(Empty, "nav/replan", self.replan_callback)
         self.follow_client.wait_for_service()
         self.get_logger().info("connected to trajectory follower service")
-        f = self.tfBuffer.wait_for_transform_async(
-            self.own_frame, self.reference_frame, rclpy.time.Time().to_msg()
-        )
-        self.get_logger().info("waiting for transform map -> baselink")
-        rclpy.spin_until_future_complete(self, f)
+        self.wait_for_tf()
         self.timer_cb()
         self.create_subscription(PoseStamped, "nav/goal", self.goal_cb, 1)
-        self.status_pub.publish(String(data="ready"))
+        self.set_state_ready()
         
         # start timer behaviour
         self.create_timer(1.0, self.timer_cb)
     
-    
+
     def timer_cb(self):
-        try:
-            trans = self.tfBuffer.lookup_transform(
-                self.reference_frame,
-                self.own_frame,
-                rclpy.time.Time().to_msg(),
-            )
-            frame = tf2_kdl.transform_to_kdl(trans)
-            pose = (frame.p.x(), frame.p.y(), frame.M.GetRPY()[2])
-
-        except Exception as e:
-            self.get_logger().warn(f"Exception in tf transformations\n{e}")
-            return
-
-        # current pose (x, y, angle) is stored in self.pose     
-        self.pose = pose
+        self.pose = self.get_tf_pose()
         
 
     def goal_cb(self, msg):
-        yaw = yaw_from_orientation(msg.pose.orientation)
+        q = msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z, msg.pose.orientation.w
+        yaw = tf_transformations.euler_from_quaternion(q)[2]
         goal = msg.pose.position.x, msg.pose.position.y, yaw
         if self.goal != goal:
             self.get_logger().info(f'received a new goal: (x={goal[0]}, y={goal[1]}, angle={goal[2]})')
+            if self.goal is None:
+                self.set_state("running")
             self.goal = goal
             self.go_to_goal()            
 
@@ -155,7 +125,8 @@ class Planner(Node):
             pose3d.pose.position.x = pose[0]
             pose3d.pose.position.y = pose[1]
             pose3d.pose.position.z = 0.0
-            pose3d.pose.orientation = yaw_to_orientation(pose[2])
+            q = tf_transformations.quaternion_from_euler(0, 0, pose[2])
+            pose3d.pose.orientation = Quaternion(x=q[0], y=q[1], z=q[2], w=q[3])
             path_msg.poses.append(pose3d)
 
         self.get_logger().info("sending path")
