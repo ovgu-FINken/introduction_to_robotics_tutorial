@@ -96,7 +96,7 @@ def generate_launch_description():
          #'robots_file': os.path.join(get_package_share_directory('state_estimation'), 'params', 'robot.yaml'),
          'poses_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'icra2021_poses.yaml'),
          'robot_names_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'robot_names_sim.yaml'),
-         'waypoints_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'icra2021_waypoints.yaml'),
+         'waypoints_file': os.path.join(get_package_share_directory('state_estimation'), 'params', 'icra_2021_real_waypoints.yaml'),
          
     }
     multi_robot_launch = IncludeLaunchDescription(
