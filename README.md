@@ -67,7 +67,6 @@ As the state-space, we will use the pose information (x, y, angle) for the robot
 
 You can find out how the transition between two states is working, by creating a path between any pair of poses with a vehicle model. The robot is able to follow the path created by the vehicle model (with an unknown tracking error).
 
-- Install the dependencies with `pip install git+https://github.com/ovgu-FINken/polygonal_roadmaps tqdm`, update the driving_swarm_infrastructure
 - Start the behaviour using the `ros2 launch planning robot.launch.py`
 - We also provide a jupyter-notebook to check your code outside of ros2 (a visualization can help to debug your code)
 
