@@ -43,7 +43,6 @@ class VelocityController(Node):
         self.position = msg.point.x, msg.point.y
     
     def publish_marker(self, position, angle, relative=False):
-        
         msg = PoseStamped()
         msg.header.stamp = self.get_clock().now().to_msg()
         if not relative:
