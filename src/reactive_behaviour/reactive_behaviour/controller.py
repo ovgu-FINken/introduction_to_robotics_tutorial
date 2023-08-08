@@ -20,6 +20,10 @@ class VelocityController(Node):
         x = x if x < 0.1 else 0.1
         x = x if x >= 0 else 0.0
         msg.linear.x = x
+        #msg.angular.z = -0.1
+
+        
+ 
         self.publisher.publish(msg)
     
     def laser_cb(self, msg):
