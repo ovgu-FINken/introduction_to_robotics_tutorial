@@ -47,9 +47,9 @@ def controller_spawning(context, *args, **kwargs):
 def generate_launch_description():
     args = {
          'behaviour': 'false',
-         'world': 'icra2021_no_obstacle.world',
-         'map': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'maps' ,'icra2021_map_no_obstacle.yaml'),
-         'poses_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'icra2021_poses.yaml'),
+         'world': 'icra2024.world',
+         'map': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'maps' ,'icra2024.yaml'),
+         'poses_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'icra2024_real_poses.yaml'),
          'robot_names_file': os.path.join(get_package_share_directory('driving_swarm_bringup'), 'params', 'robot_names_sim.yaml'),
          'rosbag_topics_file': os.path.join(get_package_share_directory('trajectory_follower'), 'params', 'rosbag_topics.yaml'),
          'qos_override_file': os.path.join(get_package_share_directory('experiment_measurement'), 'params', 'qos_override.yaml')
