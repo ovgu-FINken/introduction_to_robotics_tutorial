@@ -6,7 +6,7 @@ You can start working on the first assignment immediatly.
 ## Assignment 1: Turtlesim
 
 We will start by using the turtlesim simulation. You can find a lot of documentation for the turtlesim online, make sure that you read documentation for ros2 (version humble).
-Your task in this assignment is to enhance a 'watchdog' node, which intecepts and changes the inputs given by the user.
+Your task in this assignment is to enhance a 'watchdog' node, which intercepts and changes the inputs given by the user.
 
 The goal of this assignment is that you familiarize with the ros2 ecosystem:
 - launch a collection of nodes
