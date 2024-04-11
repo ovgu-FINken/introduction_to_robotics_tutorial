@@ -1,11 +1,10 @@
 import rclpy
 from rclpy.node import Node
-import numpy as np
+
 from geometry_msgs.msg import Twist, PoseStamped, PointStamped
 from sensor_msgs.msg import LaserScan
 import tf_transformations
-import math
-import copy
+
 class VelocityController(Node):
 
     def __init__(self):
@@ -20,65 +19,26 @@ class VelocityController(Node):
         self.pose_publisher = self.create_publisher(PoseStamped, 'pose_marker', 10)
         self.create_timer(0.1, self.timer_cb)
         self.get_logger().info('controller node started')
-        self.angle = 0
-        self.target_angle = None
-        self.points = 0
+        
     def timer_cb(self):
         msg = Twist()
-        if self.position == None or self.goal == None:
-            msg.linear.x = 0.0
-            msg.angular.z = 0.0
-        else:
-            self.target_angle = np.rad2deg(np.arctan((self.goal[1]-self.position[1])/(self.goal[0]-self.position[0])))
-            if self.goal[0]-self.position[0] < 0:
-                self.target_angle -= 180
-            #if self.position[1]-self.goal[1] > 0 and self.position[0]-self.goal[0] > 0:
-            #    self.target_angle -= 180
-            if abs(self.target_angle-self.angle) > 10:
-                if self.angle-self.target_angle < 0:
-                    msg.angular.z = 0.4
-                elif self.angle-self.target_angle > 0:
-                    msg.angular.z = -0.4
-                msg.linear.x = 0.01
-            else:
-                msg.linear.x = 0.1
-                msg.angular.z = 0.0
-            
-            #self.get_logger().info(str(self.angle)+"         "+str(self.target_angle))
-            #self.get_logger().info(str(self.goal[1]-self.position[1])+"        "+str(self.goal[0]-self.position[0]))
-            #self.get_logger().info(str(math.sqrt((self.goal[1]-self.position[1])**2+(self.goal[0]-self.position[0])**2)))
-
-        if self.forward_distance < 0.3:
-            msg.linear.x = 0.001
-            msg.angular.z = -0.1
-        #elif self.right_distance < 0.3:
-        #    msg.angular.z = 0.1
-        #elif self.left_distance < 0.3:
-        #    msg.angular.z = -0.1
-
+        x = self.forward_distance - 0.3
+        x = x if x < 0.1 else 0.1
+        x = x if x >= 0 else 0.0
+        msg.linear.x = x
         self.publisher.publish(msg)
         angle = 0
-            
-        self.angle += 6*msg.angular.z
         self.publish_marker((0,0), angle, relative=True)
-
-        #if self.angle > 90:
-        #    self.angle -= 180
-        #elif self.angle < -90:
-        #    self.angle += 180
     
     def goal_cb(self, msg):
         goal = msg.pose.position.x, msg.pose.position.y
-        
         if self.goal != goal:
             self.get_logger().info(f'received a new goal: (x={goal[0]}, y={goal[1]})')
             self.goal = goal
-            #self.angle = 0
     
     def laser_cb(self, msg):
         self.forward_distance = msg.ranges[0]
-        self.left_distance = msg.ranges[90]
-        self.right_distance = msg.ranges[270]
+        
     def position_cb(self, msg):
         self.position = msg.point.x, msg.point.y
     
@@ -99,6 +59,7 @@ class VelocityController(Node):
         msg.pose.orientation.y = q[1]
         msg.pose.orientation.z = q[2]
         msg.pose.orientation.w = q[3]
+
         self.pose_publisher.publish(msg)
 
 
