@@ -10,16 +10,16 @@ class ControllerNode(Node):
         self.publisher = self.create_publisher(String, 'controller_cmd', 10)
         self.get_logger().info('Controller node started')
         self.i = 0
-        self.period = 2.0
+        self.period = 1.0
         self.create_timer(self.period, self.timer_callback)
 
     def timer_callback(self):
         # self.get_logger().info(f'controller @ {self.period*self.i}s')
-        if self.i == 2:
+        if self.i == 10:
             msg = String(data="start")
             self.publisher.publish(msg)
             self.get_logger().info('controller: start')
-        elif self.i * self.period >= 60:
+        elif self.i * self.period >= 30:
             msg = String(data="stop")
             self.publisher.publish(msg)
             self.get_logger().info('controller: stop')
