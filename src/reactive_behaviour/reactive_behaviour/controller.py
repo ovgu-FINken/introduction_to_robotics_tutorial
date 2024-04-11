@@ -3,18 +3,22 @@ from rclpy.node import Node
 
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
+from driving_swarm_utils.node import DrivingSwarmNode, main_fn
 
-class VelocityController(Node):
+class VelocityController(DrivingSwarmNode):
 
-    def __init__(self):
-        super().__init__('velocity_controller')
+    def __init__(self, name: str) -> None:
+        super().__init__(name)
+        
         self.publisher = self.create_publisher(Twist, 'cmd_vel', 10)
         self.forward_distance = 0
         self.create_subscription(LaserScan, 'scan', self.laser_cb, rclpy.qos.qos_profile_sensor_data)
         self.create_timer(0.1, self.timer_cb)
-        self.get_logger().info('controller node started')
+        self.setup_command_interface()
         
     def timer_cb(self):
+        if not self.started:
+            return
         msg = Twist()
         x = self.forward_distance - 0.3
         x = x if x < 0.1 else 0.1
@@ -31,18 +35,9 @@ class VelocityController(Node):
 
 
 
-def main(args=None):
-    rclpy.init(args=args)
+def main():
+    main_fn('controller', VelocityController)
 
-    node = VelocityController()
-
-    rclpy.spin(node)
-
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
-    node.destroy_node()
-    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
