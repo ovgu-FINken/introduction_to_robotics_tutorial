@@ -43,6 +43,7 @@ In this assignment we want to program a reactive behaviour, that controls the ro
 - You can modify the code within the file `controller.py` to change the behaviour of the robot
 - Explore as much of the reachable area as possible (think of a cleaning robot)
 - Don't crash ;)
+- If you use a manual installation, make sure to install the skimage python package. (`pip3 install skimage`)
 
 ### Benchmark
 Run your behaviour and note the score after 240s (sim-time)
